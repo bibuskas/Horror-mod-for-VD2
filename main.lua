@@ -52,4 +52,3 @@ return function()
     for _, p in ipairs(Players:GetPlayers()) do
         setupPlayer(p)
     end
-end
