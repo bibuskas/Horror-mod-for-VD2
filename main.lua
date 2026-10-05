@@ -1,4 +1,6 @@
 return function()
+    local Players = game:GetService("Players")
+
     local ALLOWED = {
         ["Unarmed"] = true,
         ["Sledge"] = true,
@@ -10,51 +12,36 @@ return function()
         ["Flashlight"] = true
     }
 
-    local function cleanContainer(container)
+    local function clean(container)
         if not container then return end
-        for _, child in ipairs(container:GetChildren()) do
-            if child:IsA("Tool") and not ALLOWED[child.Name] then
-                child:Destroy()
+        for _, item in ipairs(container:GetChildren()) do
+            if item:IsA("Tool") and not ALLOWED[item.Name] then
+                item:Destroy()
             end
         end
     end
 
     local function setupPlayer(player)
-        local function onCharacter(char)
-            cleanContainer(char)
-            char.ChildAdded:Connect(function(child)
-                if child:IsA("Tool") and not ALLOWED[child.Name] then
-                    task.defer(function()
-                        if child and child.Parent then
-                            child:Destroy()
-                        end
-                    end)
-                end
-            end)
+        player.CharacterAdded:Connect(function(char)
+            clean(char)
+            char.ChildAdded:Connect(function() clean(char) end)
 
-            local backpack = player:FindFirstChild("Backpack") or player:WaitForChild("Backpack", 5)
+            local backpack = player:FindFirstChild("Backpack")
             if backpack then
-                cleanContainer(backpack)
-                backpack.ChildAdded:Connect(function(child)
-                    if child:IsA("Tool") and not ALLOWED[child.Name] then
-                        task.defer(function()
-                            if child and child.Parent then
-                                child:Destroy()
-                            end
-                        end)
-                    end
-                end)
+                clean(backpack)
+                backpack.ChildAdded:Connect(function() clean(backpack) end)
             end
-        end
+        end)
 
-        player.CharacterAdded:Connect(onCharacter)
         if player.Character then
-            onCharacter(player.Character)
+            clean(player.Character)
+            local backpack = player:FindFirstChild("Backpack")
+            if backpack then clean(backpack) end
         end
     end
 
-    for _, player in ipairs(game:GetService("Players"):GetPlayers()) do
-        setupPlayer(player)
+    Players.PlayerAdded:Connect(setupPlayer)
+    for _, p in ipairs(Players:GetPlayers()) do
+        setupPlayer(p)
     end
-    game:GetService("Players").PlayerAdded:Connect(setupPlayer)
 end
