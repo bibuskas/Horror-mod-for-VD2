@@ -8,10 +8,11 @@ return function()
         ["Flashlight"] = true
     }
 
-    local function checkAndClear(player)
+    local function filterLoadout(player)
         local backpack = player:FindFirstChild("Backpack")
         local UserInputService = game:GetService("UserInputService")
-      
+        
+        -- Проверяем, что игрок на ПК (нет сенсорного ввода)
         if backpack and not UserInputService.TouchEnabled then
             for _, item in ipairs(backpack:GetChildren()) do
                 if not ALLOWED[item.Name] then
@@ -24,7 +25,7 @@ return function()
     game.Players.PlayerAdded:Connect(function(player)
         player.CharacterAdded:Connect(function()
             task.wait(0.5)
-            checkAndClear(player)
+            filterLoadout(player)
         end)
     end)
 end
