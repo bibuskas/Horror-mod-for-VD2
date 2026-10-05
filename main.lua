@@ -1,5 +1,4 @@
 return function()
-    -- Точный список разрешённых предметов из твоего инвентаря:
     local ALLOWED = {
         ["Unarmed"] = true,
         ["Sledge"] = true,
@@ -11,39 +10,40 @@ return function()
         ["Flashlight"] = true
     }
 
-    local function cleanBackpack(backpack)
-        if not backpack then return end
-        for _, item in ipairs(backpack:GetChildren()) do
-            if not ALLOWED[item.Name] then
+    local function cleanContainer(container)
+        if not container then return end
+        for _, item in ipairs(container:GetChildren()) do
+            if item:IsA("Tool") and not ALLOWED[item.Name] then
                 item:Destroy()
             end
         end
     end
 
     local function setupPlayer(player)
-        -- Очищаем инвентарь при добавлении предметов
-        local function attachBackpackListener(backpack)
-            cleanBackpack(backpack)
-            backpack.ChildAdded:Connect(function(child)
+        local function onCharacter(char)
+            cleanContainer(char)
+            char.ChildAdded:Connect(function(child)
                 task.wait(0.05)
-                if not ALLOWED[child.Name] then
+                if child:IsA("Tool") and not ALLOWED[child.Name] then
                     child:Destroy()
                 end
             end)
-        end
 
-        player.CharacterAdded:Connect(function()
             local backpack = player:WaitForChild("Backpack", 5)
             if backpack then
-                attachBackpackListener(backpack)
+                cleanContainer(backpack)
+                backpack.ChildAdded:Connect(function(child)
+                    task.wait(0.05)
+                    if child:IsA("Tool") and not ALLOWED[child.Name] then
+                        child:Destroy()
+                    end
+                end)
             end
-        end)
+        end
 
+        player.CharacterAdded:Connect(onCharacter)
         if player.Character then
-            local backpack = player:FindFirstChild("Backpack")
-            if backpack then
-                attachBackpackListener(backpack)
-            end
+            onCharacter(player.Character)
         end
     end
 
