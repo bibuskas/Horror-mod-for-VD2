@@ -5,7 +5,7 @@ return function()
         ["Detonator"] = true,
         ["Sledge"] = true,
         ["Plank"] = true,
-        ["Flashlight"] = true
+        ["Lantern"] = true
     }
 
     local function filterLoadout(player)
