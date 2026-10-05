@@ -1,7 +1,6 @@
 {
-  "Name": "Horror Mod",
-  "Description": "Restricts PC player loadout for horror mode",
-  "Author": "bibuskas",
-  "Version": "1.0.0",
-  "Main": "main.lua"
+  "name": "Horror Mod",
+  "description": "Restricts PC player loadout for horror mode",
+  "version": "1.0.0",
+  "author": "bibuskas"
 }
