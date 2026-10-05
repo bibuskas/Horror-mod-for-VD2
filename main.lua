@@ -3,7 +3,7 @@ return function()
         ["Pistol"] = true,
         ["Explosive"] = true,
         ["Detonator"] = true,
-        ["Sledgehammer"] = true,
+        ["Sledge"] = true,
         ["Plank"] = true,
         ["Flashlight"] = true
     }
