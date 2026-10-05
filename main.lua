@@ -24,12 +24,20 @@ return function()
     local function setupPlayer(player)
         player.CharacterAdded:Connect(function(char)
             clean(char)
-            char.ChildAdded:Connect(function() clean(char) end)
+            char.ChildAdded:Connect(function(child)
+                if child:IsA("Tool") and not ALLOWED[child.Name] then
+                    child:Destroy()
+                end
+            end)
 
             local backpack = player:FindFirstChild("Backpack")
             if backpack then
                 clean(backpack)
-                backpack.ChildAdded:Connect(function() clean(backpack) end)
+                backpack.ChildAdded:Connect(function(child)
+                    if child:IsA("Tool") and not ALLOWED[child.Name] then
+                        child:Destroy()
+                    end
+                end)
             end
         end)
 
