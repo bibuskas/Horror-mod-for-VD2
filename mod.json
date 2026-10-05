@@ -29,3 +29,10 @@ return function()
         end)
     end)
 end
+{
+    "Name": "Horror Mod",
+    "Description": "Restricts PC player loadout for horror mode",
+    "Author": "bibuskas",
+    "Version": "1.0.0",
+    "Main": "main.lua"
+}
